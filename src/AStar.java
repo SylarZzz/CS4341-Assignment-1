@@ -139,12 +139,16 @@ public class AStar {
         private final int heuristic;
         private final ArrayList<Action> actions;
 
+        private final int cost;
+
         private PathNode(PathNode prevNode, Node boardNode, double score, int heuristic, ArrayList<Action> actions) {
             this.prevNode = prevNode;
             this.boardNode = boardNode;
             this.score = score;
             this.heuristic = heuristic;
             this.actions = actions;
+
+            this.cost = (int) Math.ceil(score + heuristic);
         }
 
         @Override
@@ -155,7 +159,7 @@ public class AStar {
             }
             // Output whether or not the given is less than the current node
             else {
-                return (int) Math.ceil(score + heuristic);
+                return this.cost > other.cost ? 1 : -1;
             }
         }
 
