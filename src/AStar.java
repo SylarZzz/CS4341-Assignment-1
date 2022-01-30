@@ -98,6 +98,7 @@ public class AStar {
 
                 // Provide the option for not boosting
                 actions.add(PathNode.Action.FORWARD);
+                score += neighbor.getTerrain();
 
                 // Add to the queue
                 queue.add(new PathNode(
