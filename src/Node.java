@@ -78,6 +78,10 @@ public class Node {
         return terrain;
     }
 
+    public Direction getDirection() {
+        return direction;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
