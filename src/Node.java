@@ -43,6 +43,20 @@ public class Node {
         this.yPos = yPos;
 
         this.direction = direction;
+        
+        // Determine isStart value
+        if (board.getStartPos()[0] == xPos && board.getStartPos()[1] == yPos) {
+            isStart = true;
+        } else {
+            isGoal = false;
+        }
+
+        // Determine isGoal value
+        if (board.getGoalPos()[0] == xPos && board.getGoalPos()[1] == yPos) {
+            isGoal = true;
+        } else {
+            isGoal = false;
+        }
     }
 
     public int getxPos() {
