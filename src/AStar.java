@@ -30,13 +30,13 @@ public class AStar {
             if(to.equals(currNode.boardNode)) {
                 ArrayList<PathNode> path = new ArrayList<>();
                 PathNode nextNode = currNode;
-                while(nextNode.getPrevNode() != null) {
+                while(nextNode != null) {
                     path.add(0, nextNode);
 
                     numActions += nextNode.actions.size();
                     pathScore += nextNode.score;
 
-                    nextNode = currNode.getPrevNode();
+                    nextNode = nextNode.getPrevNode();
                 }
 
                 return path;
