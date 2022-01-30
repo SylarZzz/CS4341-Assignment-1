@@ -80,4 +80,7 @@ public class Board {
         return pos;
     }
 
+    public char[][] getBoard() {
+        return board;
+    }
 }
