@@ -69,4 +69,47 @@ public class Node {
     public int hashCode() {
         return Objects.hash(board, xPos, yPos, isStart, isGoal, terrain);
     }
+
+    // gets neighbor terrain value.
+    /*
+        a   b   c
+        d   e   f
+        g   h   i
+
+        e's neighbors:
+        char[] neighbor = [a, d, g, b, h, c, f, i]
+     */
+    public char[] getNeighbors() {
+        char[] neighbor = new char[8];
+        for (int i = 0; i < board.getBoard().length; i++) {
+            for (int j = 0; j < board.getBoard()[i].length; j++) {
+                if (i == xPos - 1 && j == yPos - 1) {
+                    neighbor[0] = board.getBoard()[i][j];
+                }
+                else if (i == xPos && j == yPos - 1) {
+                    neighbor[1] = board.getBoard()[i][j];
+                }
+                else if (i == xPos + 1 && j == yPos - 1) {
+                    neighbor[2] = board.getBoard()[i][j];
+                }
+                else if (i == (xPos - 1) && j == yPos) {
+                    neighbor[3] = board.getBoard()[i][j];
+                }
+                else if (i == xPos + 1 && j == yPos) {
+                    neighbor[4] = board.getBoard()[i][j];
+                }
+                else if (i == xPos - 1 && j == yPos + 1) {
+                    neighbor[5] = board.getBoard()[i][j];
+                }
+                else if (i == xPos && j == yPos + 1) {
+                    neighbor[6] = board.getBoard()[i][j];
+                }
+                else if (i == xPos + 1 && j == yPos + 1) {
+                    neighbor[7] = board.getBoard()[i][j];
+                }
+            }
+        }
+
+        return neighbor;
+    }
 }
