@@ -43,8 +43,7 @@ public class Board {
         if (board[row][col] != 'S' && board[row][col] != 'G') {
             terrainVal = Character.getNumericValue(board[row][col]);
         } else {
-            System.out.println("Error: You are either trying to get the terrain value of the start or the goal node.");
-            return -1;
+            return 1;
         }
 
         return terrainVal;

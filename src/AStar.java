@@ -4,20 +4,22 @@ public class AStar {
 
     private final Heuristic heuristic;
 
+    private double pathScore = 0;
+    private int numActions = 0;
     private int numNodesExpanded = 0;
 
     public AStar(Heuristic heuristic) {
         this.heuristic = heuristic;
     }
 
-    public int getNumNodesExpanded() {
-        return numNodesExpanded;
-    }
-
     public ArrayList<PathNode> createPath(Node from, Node to) {
         final Set<Node> alreadySeen = new HashSet<>();
         final Queue<PathNode> queue = new PriorityQueue<>();
-        queue.add(new PathNode(null, from, heuristic.compute(from, to), 0, null));
+        queue.add(new PathNode(null, from, heuristic.compute(from, to), 0, new ArrayList<>()));
+
+        pathScore = 0;
+        numActions = 0;
+        numNodesExpanded = 0;
 
         // Continue looking through the path
         while (!queue.isEmpty()) {
@@ -30,6 +32,10 @@ public class AStar {
                 PathNode nextNode = currNode;
                 while(nextNode.getPrevNode() != null) {
                     path.add(0, nextNode);
+
+                    numActions += nextNode.actions.size();
+                    pathScore += nextNode.score;
+
                     nextNode = currNode.getPrevNode();
                 }
 
@@ -106,6 +112,18 @@ public class AStar {
         }
 
         return new ArrayList();
+    }
+
+    public int getNumNodesExpanded() {
+        return numNodesExpanded;
+    }
+
+    public double getPathScore() {
+        return pathScore;
+    }
+
+    public int getNumActions() {
+        return numActions;
     }
 
     public static class PathNode implements Comparable<PathNode> {
