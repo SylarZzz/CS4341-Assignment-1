@@ -102,16 +102,12 @@ public class Node {
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
         return xPos == node.xPos &&
-                yPos == node.yPos &&
-                isStart == node.isStart &&
-                isGoal == node.isGoal &&
-                terrain == node.terrain &&
-                Objects.equals(board, node.board);
+                yPos == node.yPos;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(board, xPos, yPos, isStart, isGoal, terrain);
+        return Objects.hash(xPos, yPos);
     }
 
     // gets neighbor terrain value.

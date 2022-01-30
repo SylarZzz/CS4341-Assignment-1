@@ -2,7 +2,19 @@ import java.util.*;
 
 public class AStar {
 
-    public static PathNode createPath(final Heuristic heuristic, Node from, Node to) {
+    private final Heuristic heuristic;
+
+    private int numNodesExpanded = 0;
+
+    public AStar(Heuristic heuristic) {
+        this.heuristic = heuristic;
+    }
+
+    public int getNumNodesExpanded() {
+        return numNodesExpanded;
+    }
+
+    public ArrayList<PathNode> createPath(Node from, Node to) {
         final Set<Node> alreadySeen = new HashSet<>();
         final Queue<PathNode> queue = new PriorityQueue<>();
         queue.add(new PathNode(null, from, heuristic.compute(from, to), 0, null));
@@ -14,11 +26,19 @@ public class AStar {
 
             // The end node has been found
             if(to.equals(currNode.boardNode)) {
-                return currNode;
+                ArrayList<PathNode> path = new ArrayList<>();
+                PathNode nextNode = currNode;
+                while(nextNode.getPrevNode() != null) {
+                    path.add(0, nextNode);
+                    nextNode = currNode.getPrevNode();
+                }
+
+                return path;
             }
 
             // Get neighbor nodes
             ArrayList<Node> neighbors = currNode.boardNode.getNeighbors();
+            numNodesExpanded += neighbors.size();
 
             // Add the neighbors to the queue (if they haven't already been seen, or contain a piece)
             for(Node neighbor : neighbors) {
@@ -85,7 +105,7 @@ public class AStar {
             alreadySeen.add(currNode.boardNode);
         }
 
-        return null;
+        return new ArrayList();
     }
 
     public static class PathNode implements Comparable<PathNode> {
@@ -119,6 +139,10 @@ public class AStar {
             else {
                 return (int) Math.ceil(score + heuristic);
             }
+        }
+
+        public PathNode getPrevNode() {
+            return prevNode;
         }
     }
 }
