@@ -18,7 +18,7 @@ public class AStar {
             }
 
             // Get neighbor nodes
-            ArrayList<Node> neighbors = currNode.getNeighbors();
+            ArrayList<Node> neighbors = currNode.boardNode.getNeighbors();
 
             // Add the neighbors to the queue (if they haven't already been seen, or contain a piece)
             for(Node neighbor : neighbors) {
@@ -31,8 +31,8 @@ public class AStar {
                 queue.add(new PathNode(
                         currNode,
                         neighbor,
-                        heurisitc.compute(neighbor, to),
-                        neighbor.getTerrain() + currNode.distTravelled));
+                        neighbor.getTerrain() + currBoardNode.turnCost(neighbor),
+                        heurisitc.compute(neighbor, to)));
             }
 
             alreadySeen.add(currNode.boardNode);
@@ -44,14 +44,14 @@ public class AStar {
     public static class PathNode implements Comparable<PathNode> {
         private final PathNode prevNode;
         private final Node boardNode;
-        private final int distTravelled;
-        private final int distance;
+        private final double score;
+        private final int heurisitic;
 
-        private PathNode(PathNode prevNode, Node boardNode, int distance, int distTravelled) {
+        private PathNode(PathNode prevNode, Node boardNode, double score, int heurisitic) {
             this.prevNode = prevNode;
             this.boardNode = boardNode;
-            this.distance = distance;
-            this.distTravelled = distTravelled;
+            this.score = score;
+            this.heurisitic = heurisitic;
         }
 
         @Override
@@ -62,15 +62,8 @@ public class AStar {
             }
             // Output whether or not the given is less than the current node
             else {
-                return this.distance > other.distance ? 1 : -1;
+                return (int) Math.ceil(score + heurisitic);
             }
-        }
-
-        public ArrayList<Node> getNeighbors() {
-            ArrayList<Node> neighbors = new ArrayList<>();
-            Board board = this.boardNode.board;
-
-            return neighbors;
         }
     }
 }

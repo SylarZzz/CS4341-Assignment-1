@@ -1,6 +1,31 @@
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class Node {
+
+    enum Direction {
+        NORTH,
+        SOUTH,
+        EAST,
+        WEST;
+
+        public static Direction compute(int xPosFrom, int yPosFrom, int xPosTo, int yPosTo) {
+            int xDiff = xPosTo - xPosFrom, yDiff = yPosTo - yPosFrom;
+
+            if(xDiff == 0 && yDiff < 0) {
+                return NORTH;
+            }
+            else if(xDiff == 0 && yDiff > 0) {
+                return SOUTH;
+            }
+            else if(xDiff < 0 && yDiff == 0) {
+                return WEST;
+            }
+            else {
+                return EAST;
+            }
+        }
+    }
 
     Board board;
 
@@ -9,14 +34,15 @@ public class Node {
     private boolean isStart;
     private boolean isGoal;
     private int terrain;
+    private Direction direction;
 
-
-    public Node(Board board, int xPos, int yPos) {
+    public Node(Board board, int xPos, int yPos, Direction direction) {
         this.board = board;
 
         this.xPos = xPos;
         this.yPos = yPos;
 
+        this.direction = direction;
     }
 
     public int getxPos() {
@@ -79,37 +105,39 @@ public class Node {
         e's neighbors:
         char[] neighbor = [a, d, g, b, h, c, f, i]
      */
-    public char[] getNeighbors() {
-        char[] neighbor = new char[8];
+    public ArrayList<Node> getNeighbors() {
+        final ArrayList<Node> neighbors = new ArrayList<>();
         for (int i = 0; i < board.getBoard().length; i++) {
             for (int j = 0; j < board.getBoard()[i].length; j++) {
-                if (i == xPos - 1 && j == yPos - 1) {
-                    neighbor[0] = board.getBoard()[i][j];
-                }
-                else if (i == xPos && j == yPos - 1) {
-                    neighbor[1] = board.getBoard()[i][j];
-                }
-                else if (i == xPos + 1 && j == yPos - 1) {
-                    neighbor[2] = board.getBoard()[i][j];
+                char terrainChar = '\0';
+                if (i == xPos && j == yPos - 1) {
+                    terrainChar = board.getBoard()[i][j];
                 }
                 else if (i == (xPos - 1) && j == yPos) {
-                    neighbor[3] = board.getBoard()[i][j];
+                    terrainChar = board.getBoard()[i][j];
                 }
                 else if (i == xPos + 1 && j == yPos) {
-                    neighbor[4] = board.getBoard()[i][j];
-                }
-                else if (i == xPos - 1 && j == yPos + 1) {
-                    neighbor[5] = board.getBoard()[i][j];
+                    terrainChar = board.getBoard()[i][j];
                 }
                 else if (i == xPos && j == yPos + 1) {
-                    neighbor[6] = board.getBoard()[i][j];
+                    terrainChar = board.getBoard()[i][j];
                 }
-                else if (i == xPos + 1 && j == yPos + 1) {
-                    neighbor[7] = board.getBoard()[i][j];
+                else {
+                    continue;
                 }
+
+                neighbors.add(new Node(board, i, j, Direction.compute(xPos, yPos, i, j)));
             }
         }
 
-        return neighbor;
+        return neighbors;
+    }
+
+    public double turnCost(Node neighbor) {
+        if(neighbor.direction != this.direction) {
+            return this.terrain / 2.0;
+        }
+
+        return 0;
     }
 }
