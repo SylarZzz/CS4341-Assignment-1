@@ -1,3 +1,4 @@
+import java.util.Objects;
 
 public class Node {
 
@@ -49,5 +50,23 @@ public class Node {
     public int getTerrain() {
         terrain = board.getTerrainVal(xPos, yPos);
         return terrain;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Node node = (Node) o;
+        return xPos == node.xPos &&
+                yPos == node.yPos &&
+                isStart == node.isStart &&
+                isGoal == node.isGoal &&
+                terrain == node.terrain &&
+                Objects.equals(board, node.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(board, xPos, yPos, isStart, isGoal, terrain);
     }
 }

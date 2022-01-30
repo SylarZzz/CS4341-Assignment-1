@@ -1,9 +1,5 @@
-import java.awt.desktop.SystemEventListener;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -32,17 +28,19 @@ public class Main {
 
         Board board = new Board(boardArr);
 
-        System.out.println("Starting node position: " + Arrays.toString(board.getStartPos()));
-        System.out.println("Goal node position: " + Arrays.toString(board.getGoalPos()));
+//        System.out.println("Starting node position: " + Arrays.toString(board.getStartPos()));
+//        System.out.println("Goal node position: " + Arrays.toString(board.getGoalPos()));
+//
+//        Node n1 = new Node(board,0, 0);
+//        System.out.println("Node (0, 0)'s terrain: " + n1.getTerrain());
+//        System.out.println("Node (0, 0) is start node? " + n1.isStart());
+//        System.out.println("Node (0, 0) is end node? " + n1.isGoal());
+//
+//        Node n2 = new Node(board,0, 1);
+//        System.out.println("Node (0, 1) is start node? " + n2.isStart());
+//        System.out.println("Node (0, 1) is goal node? " + n2.isGoal());
 
-        Node n1 = new Node(board,0, 0);
-        System.out.println("Node (0, 0)'s terrain: " + n1.getTerrain());
-        System.out.println("Node (0, 0) is start node? " + n1.isStart());
-        System.out.println("Node (0, 0) is end node? " + n1.isGoal());
 
-        Node n2 = new Node(board,0, 1);
-        System.out.println("Node (0, 1) is start node? " + n2.isStart());
-        System.out.println("Node (0, 1) is goal node? " + n2.isGoal());
     }
 
 }
