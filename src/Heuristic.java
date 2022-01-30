@@ -1,9 +1,9 @@
-public enum Heurisitc {
+public enum Heuristic {
     ZERO((start, end) -> 0);
 
     private final HeuristicFunc heuristicFunc;
 
-    Heurisitc(final HeuristicFunc heuristicFunc) {
+    Heuristic(final HeuristicFunc heuristicFunc) {
         this.heuristicFunc = heuristicFunc;
     }
 

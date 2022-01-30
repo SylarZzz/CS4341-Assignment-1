@@ -7,9 +7,12 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         char[][] boardArr = new char[3][4];
 
+        // Get board file name
         File file = new File(args[0]);
         Scanner sc = new Scanner(file);
 
+        // Get heuristic choice
+        final Heuristic heuristic = Heuristic.values()[Integer.parseInt(args[1]) - 1];
 
         while(sc.hasNextLine()) {
             for (int i = 0; i < boardArr.length; i++) {

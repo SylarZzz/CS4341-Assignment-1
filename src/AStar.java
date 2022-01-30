@@ -2,10 +2,10 @@ import java.util.*;
 
 public class AStar {
 
-    public static PathNode createPath(final Heurisitc heurisitc, Node from, Node to) {
+    public static PathNode createPath(final Heuristic heuristic, Node from, Node to) {
         final Set<Node> alreadySeen = new HashSet<>();
         final Queue<PathNode> queue = new PriorityQueue<>();
-        queue.add(new PathNode(null, from, heurisitc.compute(from, to), 0, null));
+        queue.add(new PathNode(null, from, heuristic.compute(from, to), 0, null));
 
         // Continue looking through the path
         while (!queue.isEmpty()) {
@@ -66,7 +66,7 @@ public class AStar {
                             currNode,
                             neighbor,
                             score + 3,
-                            heurisitc.compute(neighbor, to),
+                            heuristic.compute(neighbor, to),
                             boostActions));
                 }
 
@@ -78,7 +78,7 @@ public class AStar {
                         currNode,
                         neighbor,
                         score,
-                        heurisitc.compute(neighbor, to),
+                        heuristic.compute(neighbor, to),
                         actions));
             }
 
