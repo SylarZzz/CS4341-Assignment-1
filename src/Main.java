@@ -36,7 +36,7 @@ public class Main {
         final int[] endPos = board.getGoalPos();
 
         final Node startNode = new Node(board, startPos[0], startPos[1], Node.Direction.NORTH);
-        final Node endNode = new Node(board, startPos[0], startPos[1], null);
+        final Node endNode = new Node(board, endPos[0], endPos[1], null);
 
         // Generate the desired path with the selected A* heuristic
         final AStar aStar = new AStar(heuristic);
