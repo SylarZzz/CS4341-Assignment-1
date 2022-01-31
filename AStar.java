@@ -167,5 +167,13 @@ public class AStar {
         public PathNode getPrevNode() {
             return prevNode;
         }
+
+        public Node getBoardNode() {
+            return boardNode;
+        }
+
+        public ArrayList<Action> getActions() {
+            return actions;
+        }
     }
 }

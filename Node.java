@@ -154,4 +154,17 @@ public class Node {
 
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return "Node{" +
+                "board=" + board +
+                ", xPos=" + xPos +
+                ", yPos=" + yPos +
+                ", isStart=" + isStart +
+                ", isGoal=" + isGoal +
+                ", terrain=" + terrain +
+                ", direction=" + direction +
+                '}';
+    }
 }
