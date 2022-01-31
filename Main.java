@@ -67,7 +67,7 @@ public class Main {
 
         // Analysis
         //Generate boards
-        BoardFactory bf;
+        
 
     }
 
