@@ -65,6 +65,9 @@ public class Main {
         }
         System.out.println("Path: " + Arrays.toString(pathNodes.toArray()));
 
+        // Analysis
+        //Generate boards
+        BoardFactory bf;
 
     }
 

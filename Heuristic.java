@@ -1,5 +1,6 @@
 public enum Heuristic {
     ZERO((start, end) -> 0),
+
     MIN((start, end) -> {
         int horizontalDiff = start.getxPos() - end.getxPos();
         int verticalDiff = start.getyPos() - end.getyPos();
@@ -19,6 +20,11 @@ public enum Heuristic {
         int horizontalDiff = start.getxPos() - end.getxPos();
         int verticalDiff = start.getyPos() - end.getyPos();
         return horizontalDiff + verticalDiff + start.getTerrain() + end.getTerrain();
+    }),
+    NONADMISSIBLE((start, end) -> {
+        int horizontalDiff = start.getxPos() - end.getxPos();
+        int verticalDiff = start.getyPos() - end.getyPos();
+        return (horizontalDiff + verticalDiff + start.getTerrain() + end.getTerrain()) * 3;
     });
 
 
