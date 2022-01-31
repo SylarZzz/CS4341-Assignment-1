@@ -27,10 +27,14 @@ public class Main {
             }
         }
 
+        System.out.println("Random board: ");
+        System.out.println(BoardFactory.getBoard(4, 5));
 
-        System.out.println("Current board: " + Arrays.deepToString(boardArr));
 
         Board board = new Board(boardArr);
+
+        System.out.println("Current board: ");
+        System.out.println(board);
 
         final int[] startPos = board.getStartPos();
         final int[] endPos = board.getGoalPos();
@@ -41,6 +45,7 @@ public class Main {
         // Generate the desired path with the selected A* heuristic
         final AStar aStar = new AStar(heuristic);
         final ArrayList<AStar.PathNode> path = aStar.createPath(startNode, endNode);
+
 
 
     }

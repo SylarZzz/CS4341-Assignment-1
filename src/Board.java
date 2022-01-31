@@ -1,7 +1,3 @@
-import java.io.FileNotFoundException;
-import java.util.Arrays;
-import java.util.Scanner;
-import java.io.File;
 
 public class Board {
 
@@ -9,33 +5,11 @@ public class Board {
     public int cols;
     public char[][] board;
 
-
-
     public Board(char[][] board) {
-        rows = 3;
-        cols = 4;
+        rows = board.length;
+        cols = board[0].length;
         this.board = board;
     }
-
-/*
-    public static void main(String[] args) throws FileNotFoundException {
-        File file = new File(args[0]);
-        Scanner sc = new Scanner(file);
-
-        while(sc.hasNextLine()) {
-            for (int i = 0; i < board.length; i++) {
-                String[] line = sc.nextLine().trim().split(" ");
-                for (int j = 0; j < line.length; j++) {
-                    board[i][j] = line[j];
-                }
-            }
-        }
-        System.out.println("Current board: " + Arrays.deepToString(board));
-        System.out.println("Starting node ");
-    }
-
- */
-
 
     public int getTerrainVal (int row, int col) {
         int terrainVal = 0;
@@ -55,8 +29,8 @@ public class Board {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j] == 'S') {
-                    pos[0] = i;
-                    pos[1] = j;
+                    pos[0] = j;
+                    pos[1] = i;
                 }
             }
         }
@@ -70,8 +44,8 @@ public class Board {
         for (int i = 0; i < board.length; i++) {
             for (int j = 0; j < board[i].length; j++) {
                 if (board[i][j] == 'G') {
-                    pos[0] = i;
-                    pos[1] = j;
+                    pos[0] = j;
+                    pos[1] = i;
                 }
             }
         }
@@ -81,5 +55,18 @@ public class Board {
 
     public char[][] getBoard() {
         return board;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder boardStr = new StringBuilder();
+        for(char[] row : board) {
+            for(char value : row) {
+                boardStr.append(value);
+            }
+            boardStr.append('\n');
+        }
+
+        return boardStr.toString();
     }
 }

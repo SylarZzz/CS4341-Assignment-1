@@ -29,7 +29,7 @@ public class Node {
 
     Board board;
 
-    private int xPos;   // board[x][y]
+    private int xPos;   // board[y][x]
     private int yPos;
     private boolean isStart;
     private boolean isGoal;
