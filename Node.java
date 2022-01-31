@@ -42,6 +42,8 @@ public class Node {
         this.xPos = xPos;
         this.yPos = yPos;
 
+        this.terrain = board.getTerrainVal(yPos, xPos);
+
         this.direction = direction;
         
         // Determine isStart value
@@ -88,7 +90,6 @@ public class Node {
     }
 
     public int getTerrain() {
-        terrain = board.getTerrainVal(xPos, yPos);
         return terrain;
     }
 
@@ -121,26 +122,26 @@ public class Node {
      */
     public ArrayList<Node> getNeighbors() {
         final ArrayList<Node> neighbors = new ArrayList<>();
-        for (int i = 0; i < board.getBoard().length; i++) {
-            for (int j = 0; j < board.getBoard()[i].length; j++) {
+        for (int y = 0; y < board.getBoard().length; y++) {
+            for (int x = 0; x < board.getBoard()[y].length; x++) {
                 char terrainChar = '\0';
-                if (i == xPos && j == yPos - 1) {
-                    terrainChar = board.getBoard()[i][j];
+                if (y == xPos && x == yPos - 1) {
+                    terrainChar = board.getBoard()[y][x];
                 }
-                else if (i == (xPos - 1) && j == yPos) {
-                    terrainChar = board.getBoard()[i][j];
+                else if (y == (xPos - 1) && x == yPos) {
+                    terrainChar = board.getBoard()[y][x];
                 }
-                else if (i == xPos + 1 && j == yPos) {
-                    terrainChar = board.getBoard()[i][j];
+                else if (y == xPos + 1 && x == yPos) {
+                    terrainChar = board.getBoard()[y][x];
                 }
-                else if (i == xPos && j == yPos + 1) {
-                    terrainChar = board.getBoard()[i][j];
+                else if (y == xPos && x == yPos + 1) {
+                    terrainChar = board.getBoard()[y][x];
                 }
                 else {
                     continue;
                 }
 
-                neighbors.add(new Node(board, i, j, Direction.compute(xPos, yPos, i, j)));
+                neighbors.add(new Node(board, x, y, Direction.compute(xPos, yPos, x, y)));
             }
         }
 
