@@ -46,6 +46,24 @@ public class Main {
         final AStar aStar = new AStar(heuristic);
         final ArrayList<AStar.PathNode> path = aStar.createPath(startNode, endNode);
 
+        System.out.println("Path score: " + aStar.getPathScore());
+        System.out.println("Number of actions: " + aStar.getNumActions());
+        System.out.println("Number of nodes expanded: " + aStar.getNumNodesExpanded());
+        System.out.println("Series of actions: ");
+
+        for (int i = 0; i < path.size(); i++) {
+            ArrayList<AStar.PathNode.Action> actions = path.get(i).getActions();
+            for (int j = 0; j < actions.size(); j++) {
+                System.out.println(actions.get(j).name());
+            }
+        }
+
+        // Print path
+        ArrayList<Node> pathNodes = new ArrayList<Node>();
+        for (int i = 0; i < path.size(); i++) {
+            pathNodes.add(path.get(i).getBoardNode());
+        }
+        System.out.println("Path: " + Arrays.toString(pathNodes.toArray()));
 
 
     }
