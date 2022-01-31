@@ -15,11 +15,10 @@ public class AStar {
     public ArrayList<PathNode> createPath(Node from, Node to) {
         final Set<Node> alreadySeen = new HashSet<>();
         final Queue<PathNode> queue = new PriorityQueue<>();
-        queue.add(new PathNode(null, from, heuristic.compute(from, to), 0, new ArrayList<>()));
+        queue.add(new PathNode(null, from, heuristic.compute(from, to), 0, new ArrayList<>(), 0));
 
         pathScore = 0;
         numActions = 0;
-        numNodesExpanded = 0;
 
         // Continue looking through the path
         while (!queue.isEmpty()) {
@@ -39,12 +38,16 @@ public class AStar {
                     nextNode = nextNode.getPrevNode();
                 }
 
+                this.numNodesExpanded = currNode.numNodesExpanded;
+
                 return path;
             }
 
             // Get neighbor nodes
             ArrayList<Node> neighbors = currNode.boardNode.getNeighbors();
-            numNodesExpanded += neighbors.size();
+            Set<Node> notSeenNeighbors = new HashSet<>(neighbors);
+            notSeenNeighbors.removeAll(alreadySeen);
+            final int numNodesExpanded = notSeenNeighbors.size();
 
             // Add the neighbors to the queue (if they haven't already been seen, or contain a piece)
             for(Node neighbor : neighbors) {
@@ -93,7 +96,8 @@ public class AStar {
                             neighbor,
                             score + 3,
                             heuristic.compute(neighbor, to),
-                            boostActions));
+                            boostActions,
+                            numNodesExpanded));
                 }
 
                 // Provide the option for not boosting
@@ -106,17 +110,14 @@ public class AStar {
                         neighbor,
                         score,
                         heuristic.compute(neighbor, to),
-                        actions));
+                        actions,
+                        numNodesExpanded));
             }
 
             alreadySeen.add(currNode.boardNode);
         }
 
-        return new ArrayList();
-    }
-
-    public int getNumNodesExpanded() {
-        return numNodesExpanded;
+        return new ArrayList<PathNode>();
     }
 
     public double getPathScore() {
@@ -125,6 +126,10 @@ public class AStar {
 
     public int getNumActions() {
         return numActions;
+    }
+
+    public int getNumNodesExpanded() {
+        return numNodesExpanded;
     }
 
     public static class PathNode implements Comparable<PathNode> {
@@ -142,7 +147,10 @@ public class AStar {
 
         private final int cost;
 
-        private PathNode(PathNode prevNode, Node boardNode, double score, int heuristic, ArrayList<Action> actions) {
+        private final int numNodesExpanded;
+
+        private PathNode(PathNode prevNode, Node boardNode, double score, int heuristic, ArrayList<Action> actions,
+                         int numNodesExpanded) {
             this.prevNode = prevNode;
             this.boardNode = boardNode;
             this.score = score;
@@ -150,6 +158,8 @@ public class AStar {
             this.actions = actions;
 
             this.cost = (int) Math.ceil(score + heuristic);
+
+            this.numNodesExpanded = numNodesExpanded + (prevNode != null ? prevNode.numNodesExpanded : 0);
         }
 
         @Override
