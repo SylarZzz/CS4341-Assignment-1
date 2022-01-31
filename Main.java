@@ -51,24 +51,20 @@ public class Main {
         System.out.println("Number of nodes expanded: " + aStar.getNumNodesExpanded());
         System.out.println("Series of actions: ");
 
-        for (int i = 0; i < path.size(); i++) {
-            ArrayList<AStar.PathNode.Action> actions = path.get(i).getActions();
-            for (int j = 0; j < actions.size(); j++) {
-                System.out.println(actions.get(j).name());
+        for(AStar.PathNode pathNode : path) {
+            ArrayList<AStar.PathNode.Action> actions = pathNode.getActions();
+            for(AStar.PathNode.Action action : actions) {
+                System.out.println(action.name());
             }
         }
 
-        // Print path
-        ArrayList<Node> pathNodes = new ArrayList<Node>();
-        for (int i = 0; i < path.size(); i++) {
-            pathNodes.add(path.get(i).getBoardNode());
-        }
-        System.out.println("Path: " + Arrays.toString(pathNodes.toArray()));
-        System.out.println();
-
-
-
-
+//        // Print path
+//        ArrayList<Node> pathNodes = new ArrayList<Node>();
+//        for(AStar.PathNode pathNode : path) {
+//            pathNodes.add(pathNode.getBoardNode());
+//        }
+//        System.out.println("Path: " + Arrays.toString(pathNodes.toArray()));
+//        System.out.println();
     }
 
 }
