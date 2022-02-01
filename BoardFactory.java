@@ -6,8 +6,8 @@ public class BoardFactory {
 
     public static Board getBoard(int totalRow, int totalCol) {
         final char[][] board = new char[totalRow][totalCol];
-        // TODO remove seed
-        final Random rand = new Random(0);
+        // TODO REMOVE SEED
+        final Random rand = new Random();
 
         // Compute terrain values
         for(int row = 0; row < totalRow; row++) {

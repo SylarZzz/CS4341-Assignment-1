@@ -1,4 +1,9 @@
 
+import java.sql.Time;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.temporal.Temporal;
+import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -12,11 +17,12 @@ public class Analysis {
 
 
         // Generate 10 boards and run each of them with the six heuristics
-        // TODO change back to a max of 10
+        // TODO remove limit of 1 board
         for (int k = 0; k < 1; k++) {
             System.out.println("Analysis of board number " + (k + 1) + ": ");
 
-            Board b1 = BoardFactory.getBoard(10, 10);
+            // TODO change to size so that H1 takes 30 seconds (100x100 seems okay)
+            Board b1 = BoardFactory.getBoard(20, 20);
 
             System.out.println("New board: ");
             System.out.println(b1);
@@ -34,15 +40,20 @@ public class Analysis {
             final Node endNode1 = new Node(b1, endPos1[0], endPos1[1], null);
 
             // Run analysis with six heuristics
-            for (int i = 1; i < 7; i++) {
+            for (int i = 1; i <= Heuristic.values().length; i++) {
                 final Heuristic heuristicN = Heuristic.values()[i - 1];
                 final AStar aStarN = new AStar(heuristicN);
+
+                Instant start = Instant.now();
                 final ArrayList<AStar.PathNode> pathN = aStarN.createPath(startNode1, endNode1);
+                Instant stop = Instant.now();
+
                 System.out.println("Heuristic " + i + ": ");
+                System.out.println("Computation Time: " + Duration.between(start, stop).getSeconds() + " seconds");
                 System.out.println("Path score: " + aStarN.getPathScore());
                 System.out.println("Number of actions: " + aStarN.getNumActions());
                 System.out.println("Number of nodes expanded: " + aStarN.getNumNodesExpanded());
-                printPath(pathN);
+//                printPath(pathN);
                 System.out.println();
             }
         }

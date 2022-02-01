@@ -12,12 +12,20 @@ public class AStar {
         this.heuristic = heuristic;
     }
 
+    /* TODO Heuristic 1-5 isn't always identical
+     * This isn't just heuristic #5 either.
+     * Sometimes #1-2 are doing better in terms of score compared to the others.
+     * Sometimes #5 is doing better than the rest as well (which does't make sense).
+     * This seems to prove it is something wrong with A* still.
+     */
     public ArrayList<PathNode> createPath(Node from, Node to) {
         final Set<Node> alreadySeen = new HashSet<>();
         final Queue<PathNode> queue = new PriorityQueue<>();
-        queue.add(new PathNode(null, from, 0, heuristic.compute(from, to), new ArrayList<>(), 0));
+        queue.add(new PathNode(null, from, 0, heuristic.compute(from, to), new ArrayList<>()));
 
         numActions = 0;
+        numNodesExpanded = 0;
+        pathScore = 0;
 
         // Continue looking through the path
         while (!queue.isEmpty()) {
@@ -36,9 +44,7 @@ public class AStar {
                     nextNode = nextNode.getPrevNode();
                 }
 
-                numNodesExpanded = currNode.numNodesExpanded;
-                pathScore = currNode.cost;
-                pathScore = 100 - pathScore;
+                pathScore = 100 - currNode.cost;
 
                 return path;
             }
@@ -47,7 +53,7 @@ public class AStar {
             ArrayList<Node> neighbors = currNode.boardNode.getNeighbors();
             Set<Node> notSeenNeighbors = new HashSet<>(neighbors);
             notSeenNeighbors.removeAll(alreadySeen);
-            final int numNodesExpanded = notSeenNeighbors.size();
+            numNodesExpanded += notSeenNeighbors.size();
 
             // Add the neighbors to the queue (if they haven't already been seen, or contain a piece)
             for(Node neighbor : neighbors) {
@@ -96,8 +102,7 @@ public class AStar {
                             neighbor,
                             score + 3,
                             heuristic.compute(neighbor, to),
-                            boostActions,
-                            numNodesExpanded));
+                            boostActions));
                 }
 
                 // Provide the option for not boosting
@@ -110,8 +115,7 @@ public class AStar {
                         neighbor,
                         score,
                         heuristic.compute(neighbor, to),
-                        actions,
-                        numNodesExpanded));
+                        actions));
             }
 
             alreadySeen.add(currNode.boardNode);
@@ -141,28 +145,22 @@ public class AStar {
 
         private final PathNode prevNode;
         private final Node boardNode;
-        private final int score;
         private final int heuristic;
         private final ArrayList<Action> actions;
+        private final int cost;
 
-        private int cost;
-
-        private final int numNodesExpanded;
-
-        private PathNode(PathNode prevNode, Node boardNode, int score, int heuristic, ArrayList<Action> actions,
-                         int numNodesExpanded) {
+        private PathNode(PathNode prevNode, Node boardNode, int score, int heuristic, ArrayList<Action> actions) {
             this.prevNode = prevNode;
             this.boardNode = boardNode;
-            this.score = score;
             this.heuristic = heuristic;
             this.actions = actions;
 
-            this.cost = score;
-            if(prevNode != null) {
-                this.cost += prevNode.score;
+            if(prevNode == null) {
+                this.cost = 0;
             }
-
-            this.numNodesExpanded = numNodesExpanded + (prevNode != null ? prevNode.numNodesExpanded : 0);
+            else {
+                this.cost = score + prevNode.cost;
+            }
         }
 
         @Override
@@ -173,7 +171,7 @@ public class AStar {
             }
             // Output whether or not the given is less than the current node
             else {
-                return this.cost + heuristic > other.cost + heuristic ? 1 : -1;
+                return this.cost + this.heuristic > other.cost + other.heuristic ? 1 : -1;
             }
         }
 
