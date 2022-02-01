@@ -17,7 +17,6 @@ public class AStar {
         final Queue<PathNode> queue = new PriorityQueue<>();
         queue.add(new PathNode(null, from, 0, heuristic.compute(from, to), new ArrayList<>(), 0));
 
-        pathScore = 0;
         numActions = 0;
 
         // Continue looking through the path
@@ -33,12 +32,12 @@ public class AStar {
                     path.add(0, nextNode);
 
                     numActions += nextNode.actions.size();
-                    pathScore += nextNode.score;
 
                     nextNode = nextNode.getPrevNode();
                 }
 
                 numNodesExpanded = currNode.numNodesExpanded;
+                pathScore = currNode.cost;
                 pathScore = 100 - pathScore;
 
                 return path;
@@ -146,7 +145,7 @@ public class AStar {
         private final int heuristic;
         private final ArrayList<Action> actions;
 
-        private final int cost;
+        private int cost;
 
         private final int numNodesExpanded;
 
@@ -158,7 +157,10 @@ public class AStar {
             this.heuristic = heuristic;
             this.actions = actions;
 
-            this.cost = score + heuristic;
+            this.cost = score;
+            if(prevNode != null) {
+                this.cost += prevNode.score;
+            }
 
             this.numNodesExpanded = numNodesExpanded + (prevNode != null ? prevNode.numNodesExpanded : 0);
         }
@@ -171,7 +173,7 @@ public class AStar {
             }
             // Output whether or not the given is less than the current node
             else {
-                return this.cost > other.cost ? 1 : -1;
+                return this.cost + heuristic > other.cost + heuristic ? 1 : -1;
             }
         }
 

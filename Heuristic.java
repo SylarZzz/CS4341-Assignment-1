@@ -19,7 +19,7 @@ public enum Heuristic {
     ADMISSIBLE((start, end) -> {
         int horizontalDiff = Math.abs(start.getxPos() - end.getxPos());
         int verticalDiff = Math.abs(start.getyPos() - end.getyPos());
-        return horizontalDiff + verticalDiff + start.getTerrain() + end.getTerrain();
+        return horizontalDiff + verticalDiff + end.getTerrain();
     }),
     NONADMISSIBLE((start, end) -> {
         int horizontalDiff = Math.abs(start.getxPos() - end.getxPos());
