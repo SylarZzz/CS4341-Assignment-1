@@ -149,9 +149,9 @@ public class Node {
         return neighbors;
     }
 
-    public double turnCost(Node neighbor) {
+    public int turnCost(Node neighbor) {
         if(neighbor.direction != this.direction) {
-            return this.terrain / 2.0;
+            return (int) Math.ceil(this.terrain / 2.0);
         }
 
         return 0;

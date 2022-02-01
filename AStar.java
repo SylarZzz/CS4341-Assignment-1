@@ -15,7 +15,7 @@ public class AStar {
     public ArrayList<PathNode> createPath(Node from, Node to) {
         final Set<Node> alreadySeen = new HashSet<>();
         final Queue<PathNode> queue = new PriorityQueue<>();
-        queue.add(new PathNode(null, from, heuristic.compute(from, to), 0, new ArrayList<>(), 0));
+        queue.add(new PathNode(null, from, 0, heuristic.compute(from, to), new ArrayList<>(), 0));
 
         pathScore = 0;
         numActions = 0;
@@ -38,7 +38,8 @@ public class AStar {
                     nextNode = nextNode.getPrevNode();
                 }
 
-                this.numNodesExpanded = currNode.numNodesExpanded;
+                numNodesExpanded = currNode.numNodesExpanded;
+                pathScore = 100 - pathScore;
 
                 return path;
             }
@@ -57,7 +58,7 @@ public class AStar {
                 }
 
                 final ArrayList<PathNode.Action> actions = new ArrayList<>();
-                double score = 0; // neighbor.getTerrain() + currBoardNode.turnCost(neighbor)
+                int score = 0;
 
                 // If the current node is not facing the same direction as the neighbor, a turn action is required
                 if(neighbor.getDirection() != currBoardNode.getDirection()) {
@@ -141,7 +142,7 @@ public class AStar {
 
         private final PathNode prevNode;
         private final Node boardNode;
-        private final double score;
+        private final int score;
         private final int heuristic;
         private final ArrayList<Action> actions;
 
@@ -149,7 +150,7 @@ public class AStar {
 
         private final int numNodesExpanded;
 
-        private PathNode(PathNode prevNode, Node boardNode, double score, int heuristic, ArrayList<Action> actions,
+        private PathNode(PathNode prevNode, Node boardNode, int score, int heuristic, ArrayList<Action> actions,
                          int numNodesExpanded) {
             this.prevNode = prevNode;
             this.boardNode = boardNode;
@@ -157,7 +158,7 @@ public class AStar {
             this.heuristic = heuristic;
             this.actions = actions;
 
-            this.cost = (int) Math.ceil(score + heuristic);
+            this.cost = score + heuristic;
 
             this.numNodesExpanded = numNodesExpanded + (prevNode != null ? prevNode.numNodesExpanded : 0);
         }

@@ -12,7 +12,8 @@ public class Analysis {
 
 
         // Generate 10 boards and run each of them with the six heuristics
-        for (int k = 0; k < 10; k++) {
+        // TODO change back to a max of 10
+        for (int k = 0; k < 1; k++) {
             System.out.println("Analysis of board number " + (k + 1) + ": ");
 
             Board b1 = BoardFactory.getBoard(10, 10);
