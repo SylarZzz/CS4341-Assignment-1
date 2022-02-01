@@ -1,9 +1,6 @@
 
-import java.sql.Time;
 import java.time.Duration;
 import java.time.Instant;
-import java.time.temporal.Temporal;
-import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -22,7 +19,7 @@ public class Analysis {
             System.out.println("Analysis of board number " + (k + 1) + ": ");
 
             // TODO change to size so that H1 takes 30 seconds (100x100 seems okay)
-            Board b1 = BoardFactory.getBoard(20, 20);
+            Board b1 = BoardFactory.getBoard(10, 10);
 
             System.out.println("New board: ");
             System.out.println(b1);
@@ -53,7 +50,7 @@ public class Analysis {
                 System.out.println("Path score: " + aStarN.getPathScore());
                 System.out.println("Number of actions: " + aStarN.getNumActions());
                 System.out.println("Number of nodes expanded: " + aStarN.getNumNodesExpanded());
-//                printPath(pathN);
+                printPath(pathN);
                 System.out.println();
             }
         }
@@ -65,9 +62,7 @@ public class Analysis {
 
         // copy old array into new one
         for(int i = 0; i < origBoard.length; i++) {
-            for(int j = 0; j < origBoard[0].length; j++) {
-                board[i][j] = origBoard[i][j];
-            }
+            System.arraycopy(origBoard[i], 0, board[i], 0, origBoard[0].length);
         }
 
         for(AStar.PathNode pathNode : pathNodes) {

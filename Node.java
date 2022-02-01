@@ -29,12 +29,12 @@ public class Node {
 
     Board board;
 
-    private int xPos;   // board[y][x]
-    private int yPos;
+    private final int xPos;   // board[y][x]
+    private final int yPos;
     private boolean isStart;
     private boolean isGoal;
-    private int terrain;
-    private Direction direction;
+    private final int terrain;
+    private final Direction direction;
 
     public Node(Board board, int xPos, int yPos, Direction direction) {
         this.board = board;
@@ -47,18 +47,10 @@ public class Node {
         this.direction = direction;
         
         // Determine isStart value
-        if (board.getStartPos()[0] == xPos && board.getStartPos()[1] == yPos) {
-            isStart = true;
-        } else {
-            isGoal = false;
-        }
+        isStart = board.getStartPos()[0] == xPos && board.getStartPos()[1] == yPos;
 
         // Determine isGoal value
-        if (board.getGoalPos()[0] == xPos && board.getGoalPos()[1] == yPos) {
-            isGoal = true;
-        } else {
-            isGoal = false;
-        }
+        isGoal = board.getGoalPos()[0] == xPos && board.getGoalPos()[1] == yPos;
     }
 
     public int getxPos() {
@@ -81,11 +73,7 @@ public class Node {
 
     public boolean isGoal() {
         // Check whether this node is goal
-        if (board.getGoalPos()[0] == xPos && board.getGoalPos()[1] == yPos) {
-            isGoal = true;
-        } else {
-            isGoal = false;
-        }
+        isGoal = board.getGoalPos()[0] == xPos && board.getGoalPos()[1] == yPos;
         return isGoal;
     }
 
@@ -103,8 +91,8 @@ public class Node {
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
         return xPos == node.xPos &&
-                yPos == node.yPos &&
-                terrain == node.terrain;
+            yPos == node.yPos &&
+            terrain == node.terrain;
     }
 
     @Override

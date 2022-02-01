@@ -19,7 +19,7 @@ public class AStar {
      * This seems to prove it is something wrong with A* still.
      */
     public ArrayList<PathNode> createPath(Node from, Node to) {
-        final Set<Node> alreadySeen = new HashSet<>();
+        final Set<PathNode> alreadySeen = new HashSet<>();
         final Queue<PathNode> queue = new PriorityQueue<>();
         queue.add(new PathNode(null, from, 0, heuristic.compute(from, to), new ArrayList<>()));
 
@@ -31,6 +31,12 @@ public class AStar {
         while (!queue.isEmpty()) {
             final PathNode currNode = queue.remove();
             final Node currBoardNode = currNode.boardNode;
+
+            // If the coordinate has already been seen, skip the coordinate
+            if(alreadySeen.contains(currNode)) {
+                numNodesExpanded--;
+                continue;
+            }
 
             // The end node has been found
             if(to.equals(currNode.boardNode)) {
@@ -44,24 +50,16 @@ public class AStar {
                     nextNode = nextNode.getPrevNode();
                 }
 
-                pathScore = 100 - currNode.cost;
+                pathScore = 100 - currNode.totalCost;
 
                 return path;
             }
 
             // Get neighbor nodes
             ArrayList<Node> neighbors = currNode.boardNode.getNeighbors();
-            Set<Node> notSeenNeighbors = new HashSet<>(neighbors);
-            notSeenNeighbors.removeAll(alreadySeen);
-            numNodesExpanded += notSeenNeighbors.size();
 
             // Add the neighbors to the queue (if they haven't already been seen, or contain a piece)
             for(Node neighbor : neighbors) {
-                // If the coordinate has already been seen, skip the coordinate
-                if(alreadySeen.contains(neighbor)) {
-                    continue;
-                }
-
                 final ArrayList<PathNode.Action> actions = new ArrayList<>();
                 int score = 0;
 
@@ -92,7 +90,7 @@ public class AStar {
                         (neighbor.getDirection().equals(Node.Direction.NORTH) ||
                             neighbor.getDirection().equals(Node.Direction.SOUTH));
 
-                if(!currNode.actions.contains(PathNode.Action.BOOST) && neighbor.getTerrain() >= 3 &&
+                if(!currNode.actions.contains(PathNode.Action.BOOST) && neighbor.getTerrain() > 3 &&
                         (movingFarFromX || movingFarFromY)) {
                     // Add a boost action node as an option
                     final ArrayList<PathNode.Action> boostActions = new ArrayList<>(actions);
@@ -103,6 +101,9 @@ public class AStar {
                             score + 3,
                             heuristic.compute(neighbor, to),
                             boostActions));
+
+                    // Increase expanded node count
+                    numNodesExpanded += 1;
                 }
 
                 // Provide the option for not boosting
@@ -116,12 +117,14 @@ public class AStar {
                         score,
                         heuristic.compute(neighbor, to),
                         actions));
+                // Increase expanded node count
+                numNodesExpanded += 1;
             }
 
-            alreadySeen.add(currNode.boardNode);
+            alreadySeen.add(currNode);
         }
 
-        return new ArrayList<PathNode>();
+        return new ArrayList<>();
     }
 
     public double getPathScore() {
@@ -145,34 +148,24 @@ public class AStar {
 
         private final PathNode prevNode;
         private final Node boardNode;
-        private final int heuristic;
         private final ArrayList<Action> actions;
-        private final int cost;
+
+        private final int totalCost;
+        private final int futureCost;
 
         private PathNode(PathNode prevNode, Node boardNode, int score, int heuristic, ArrayList<Action> actions) {
             this.prevNode = prevNode;
             this.boardNode = boardNode;
-            this.heuristic = heuristic;
             this.actions = actions;
 
             if(prevNode == null) {
-                this.cost = 0;
+                this.totalCost = 0;
             }
             else {
-                this.cost = score + prevNode.cost;
+                this.totalCost = score + prevNode.totalCost;
             }
-        }
 
-        @Override
-        public int compareTo(PathNode other) {
-            // Output whether or not they are equal
-            if (this.equals(other)) {
-                return 0;
-            }
-            // Output whether or not the given is less than the current node
-            else {
-                return this.cost + this.heuristic > other.cost + other.heuristic ? 1 : -1;
-            }
+            this.futureCost = totalCost + heuristic;
         }
 
         public PathNode getPrevNode() {
@@ -185,6 +178,33 @@ public class AStar {
 
         public ArrayList<Action> getActions() {
             return actions;
+        }
+
+        @Override
+        public int compareTo(PathNode other) {
+            // Output whether or not they are equal
+            if (this.equals(other)) {
+                return 0;
+            }
+            // Output whether or not the given is less than the current node
+            else {
+                return this.futureCost > other.futureCost ? 1 : -1;
+            }
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            PathNode pathNode = (PathNode) o;
+            return Objects.equals(prevNode, pathNode.prevNode) &&
+                    boardNode.equals(pathNode.boardNode) &&
+                    actions.equals(pathNode.actions);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(prevNode, boardNode, actions);
         }
     }
 }

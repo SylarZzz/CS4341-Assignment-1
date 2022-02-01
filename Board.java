@@ -12,7 +12,7 @@ public class Board {
     }
 
     public int getTerrainVal (int row, int col) {
-        int terrainVal = 0;
+        int terrainVal;
 
         if (board[row][col] != 'S' && board[row][col] != 'G') {
             terrainVal = Character.getNumericValue(board[row][col]);

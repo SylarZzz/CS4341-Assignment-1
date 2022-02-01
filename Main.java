@@ -1,7 +1,6 @@
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -20,16 +19,12 @@ public class Main {
                 String[] line = sc.nextLine().trim().split("\\t");
                 for (int j = 0; j < line.length; j++) {
                     String[] splitLine = line[j].split("\\t");
-                    for (int k = 0; k < splitLine.length; k++) {
-                        boardArr[i][j] = splitLine[k].charAt(0);
+                    for (String s : splitLine) {
+                        boardArr[i][j] = s.charAt(0);
                     }
                 }
             }
         }
-
-        //System.out.println("Random board: ");
-        //System.out.println(BoardFactory.getBoard(4, 5));
-
 
         Board board = new Board(boardArr);
 
@@ -57,14 +52,6 @@ public class Main {
                 System.out.println(action.name());
             }
         }
-
-//        // Print path
-//        ArrayList<Node> pathNodes = new ArrayList<Node>();
-//        for(AStar.PathNode pathNode : path) {
-//            pathNodes.add(pathNode.getBoardNode());
-//        }
-//        System.out.println("Path: " + Arrays.toString(pathNodes.toArray()));
-//        System.out.println();
     }
 
 }

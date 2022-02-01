@@ -31,7 +31,7 @@ public enum Heuristic {
          * In order to be superior over the previous heuristic, could consider the potentially necessary cost to turn
          * on the current node in order to face the direction of the goal.
          */
-//        return horizontalDiff + verticalDiff + start.turnCost(end);
+        return horizontalDiff + verticalDiff + start.turnCost(end);
 //===================================================================================
 
 //===================================================================================
@@ -44,17 +44,17 @@ public enum Heuristic {
             3. Filter out the goal itself as a possible neighbor
             4. Use the resulting neighbor's terrain score
          */
-        final ArrayList<Node> neighbors = start.getNeighbors();
-        final Node.Direction dirTowardsEnd =
-                Node.Direction.compute(start.getxPos(), start.getyPos(), end.getxPos(), end.getyPos());
-        neighbors.removeIf(neighbor -> !neighbor.isGoal() && neighbor.getDirection() == dirTowardsEnd);
-
-        int inBetweenTerrain = 0;
-        if(neighbors.size() > 0) {
-            inBetweenTerrain += neighbors.get(0).getTerrain();
-        }
-
-        return horizontalDiff + verticalDiff + inBetweenTerrain;
+//        final ArrayList<Node> neighbors = start.getNeighbors();
+//        final Node.Direction dirTowardsEnd =
+//                Node.Direction.compute(start.getxPos(), start.getyPos(), end.getxPos(), end.getyPos());
+//        neighbors.removeIf(neighbor -> !neighbor.isGoal() && neighbor.getDirection() == dirTowardsEnd);
+//
+//        int inBetweenTerrain = 0;
+//        if(neighbors.size() > 0) {
+//            inBetweenTerrain += neighbors.get(0).getTerrain();
+//        }
+//
+//        return horizontalDiff + verticalDiff + inBetweenTerrain;
 //===================================================================================
 
         /*
