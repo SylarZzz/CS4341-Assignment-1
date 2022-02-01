@@ -41,9 +41,45 @@ public class Analysis {
                 System.out.println("Path score: " + aStarN.getPathScore());
                 System.out.println("Number of actions: " + aStarN.getNumActions());
                 System.out.println("Number of nodes expanded: " + aStarN.getNumNodesExpanded());
+                printPath(pathN);
                 System.out.println();
             }
         }
+    }
+
+    private static void printPath(ArrayList<AStar.PathNode> pathNodes) {
+        final char[][] origBoard = pathNodes.get(pathNodes.size() - 1).getBoardNode().board.board;
+        final char[][] board = new char[origBoard.length][origBoard[0].length];
+
+        // copy old array into new one
+        for(int i = 0; i < origBoard.length; i++) {
+            for(int j = 0; j < origBoard[0].length; j++) {
+                board[i][j] = origBoard[i][j];
+            }
+        }
+
+        for(AStar.PathNode pathNode : pathNodes) {
+            final Node currNode = pathNode.getBoardNode();
+
+            final char pathChar;
+            if(pathNode.getBoardNode().isGoal()) {
+                pathChar = 'G';
+            }
+            else if(pathNode.getActions().contains(AStar.PathNode.Action.BOOST)) {
+                pathChar = 'B';
+            }
+            else {
+                switch(currNode.getDirection()) {
+                    case NORTH -> pathChar = '^';
+                    case EAST ->  pathChar = '>';
+                    case SOUTH ->  pathChar = 'V';
+                    case WEST ->  pathChar = '<';
+                    default -> pathChar = ' ';
+                }
+            }
+            board[currNode.getyPos()][currNode.getxPos()] = pathChar;
+        }
+        System.out.println(new Board(board));
     }
 }
 

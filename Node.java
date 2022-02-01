@@ -103,12 +103,13 @@ public class Node {
         if (o == null || getClass() != o.getClass()) return false;
         Node node = (Node) o;
         return xPos == node.xPos &&
-                yPos == node.yPos;
+                yPos == node.yPos &&
+                terrain == node.terrain;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(xPos, yPos);
+        return Objects.hash(xPos, yPos, terrain);
     }
 
     // gets neighbor terrain value.
@@ -125,16 +126,16 @@ public class Node {
         for (int y = 0; y < board.getBoard().length; y++) {
             for (int x = 0; x < board.getBoard()[y].length; x++) {
                 char terrainChar = '\0';
-                if (y == xPos && x == yPos - 1) {
+                if (x == xPos && y == yPos - 1) {
                     terrainChar = board.getBoard()[y][x];
                 }
-                else if (y == (xPos - 1) && x == yPos) {
+                else if (x == (xPos - 1) && y == yPos) {
                     terrainChar = board.getBoard()[y][x];
                 }
-                else if (y == xPos + 1 && x == yPos) {
+                else if (x == xPos + 1 && y == yPos) {
                     terrainChar = board.getBoard()[y][x];
                 }
-                else if (y == xPos && x == yPos + 1) {
+                else if (x == xPos && y == yPos + 1) {
                     terrainChar = board.getBoard()[y][x];
                 }
                 else {
