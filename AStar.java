@@ -32,12 +32,6 @@ public class AStar {
             final PathNode currNode = queue.remove();
             final Node currBoardNode = currNode.boardNode;
 
-            // If the coordinate has already been seen, skip the coordinate
-            if(alreadySeen.contains(currNode)) {
-                numNodesExpanded--;
-                continue;
-            }
-
             // The end node has been found
             if(to.equals(currNode.boardNode)) {
                 ArrayList<PathNode> path = new ArrayList<>();
@@ -58,6 +52,7 @@ public class AStar {
             // Get neighbor nodes
             ArrayList<Node> neighbors = currNode.boardNode.getNeighbors();
 
+            // TODO node expanded count is inaccurate due to it be calculated without the nodes "technically" being expanded
             // Add the neighbors to the queue (if they haven't already been seen, or contain a piece)
             for(Node neighbor : neighbors) {
                 final ArrayList<PathNode.Action> actions = new ArrayList<>();
@@ -95,13 +90,21 @@ public class AStar {
                     // Add a boost action node as an option
                     final ArrayList<PathNode.Action> boostActions = new ArrayList<>(actions);
                     boostActions.add(PathNode.Action.BOOST);
-                    queue.add(new PathNode(
+
+                    final PathNode newNode = new PathNode(
                             currNode,
                             neighbor,
                             score + 3,
                             heuristic.compute(neighbor, to),
-                            boostActions));
+                            boostActions);
 
+                    // If the node has already been seen, skip the coordinate
+                    if(alreadySeen.contains(newNode)) {
+                        continue;
+                    }
+
+                    // Add to the queue
+                    queue.add(newNode);
                     // Increase expanded node count
                     numNodesExpanded += 1;
                 }
@@ -110,13 +113,20 @@ public class AStar {
                 actions.add(PathNode.Action.FORWARD);
                 score += neighbor.getTerrain();
 
-                // Add to the queue
-                queue.add(new PathNode(
+                final PathNode newNode = new PathNode(
                         currNode,
                         neighbor,
                         score,
                         heuristic.compute(neighbor, to),
-                        actions));
+                        actions);
+
+                // If the node has already been seen, skip the coordinate
+                if(alreadySeen.contains(newNode)) {
+                    continue;
+                }
+
+                // Add to the queue
+                queue.add(newNode);
                 // Increase expanded node count
                 numNodesExpanded += 1;
             }
@@ -149,6 +159,7 @@ public class AStar {
         private final PathNode prevNode;
         private final Node boardNode;
         private final ArrayList<Action> actions;
+        private final int score;
 
         private final int totalCost;
         private final int futureCost;
@@ -157,6 +168,7 @@ public class AStar {
             this.prevNode = prevNode;
             this.boardNode = boardNode;
             this.actions = actions;
+            this.score = score;
 
             if(prevNode == null) {
                 this.totalCost = 0;
@@ -197,14 +209,13 @@ public class AStar {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             PathNode pathNode = (PathNode) o;
-            return Objects.equals(prevNode, pathNode.prevNode) &&
-                    boardNode.equals(pathNode.boardNode) &&
-                    actions.equals(pathNode.actions);
+            return boardNode.equals(pathNode.boardNode) &&
+                    score == pathNode.score;
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(prevNode, boardNode, actions);
+            return Objects.hash(boardNode, score);
         }
     }
 }

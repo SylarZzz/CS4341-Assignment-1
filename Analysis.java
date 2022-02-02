@@ -62,7 +62,9 @@ public class Analysis {
 
         // copy old array into new one
         for(int i = 0; i < origBoard.length; i++) {
-            System.arraycopy(origBoard[i], 0, board[i], 0, origBoard[0].length);
+            for(int j = 0; j < origBoard[0].length; j++) {
+                board[i][j] = origBoard[i][j];
+            }
         }
 
         for(AStar.PathNode pathNode : pathNodes) {
