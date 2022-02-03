@@ -21,9 +21,9 @@ public class AStar {
      * This seems to prove it is something wrong with A* still.
      */
     public ArrayList<PathNode> createPath(Node from, Node to) {
-        System.gc();
-        final BigInteger beforeUsedMem =
-                BigInteger.valueOf(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory());
+//        System.gc();
+//        final BigInteger beforeUsedMem =
+//                BigInteger.valueOf(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory());
         final Set<PathNode> alreadySeen = new HashSet<>();
         final Queue<PathNode> queue = new PriorityQueue<>();
 
@@ -42,11 +42,11 @@ public class AStar {
 
             // The end node has been found
             if(to.equals(currNode.boardNode)) {
-                System.gc();
-                final BigInteger afterUsedMem =
-                        BigInteger.valueOf(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory());
-
-                System.out.println("Memory Usage: " + (afterUsedMem.subtract(beforeUsedMem)) + " bytes");
+//                System.gc();
+//                final BigInteger afterUsedMem =
+//                        BigInteger.valueOf(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory());
+//
+//                System.out.println("Memory Usage: " + (afterUsedMem.subtract(beforeUsedMem)) + " bytes");
 
                 ArrayList<PathNode> path = new ArrayList<>();
                 PathNode nextNode = currNode;
