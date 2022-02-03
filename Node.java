@@ -111,27 +111,21 @@ public class Node {
      */
     public ArrayList<Node> getNeighbors() {
         final ArrayList<Node> neighbors = new ArrayList<>();
-        for (int y = 0; y < board.getBoard().length; y++) {
-            for (int x = 0; x < board.getBoard()[y].length; x++) {
-                char terrainChar = '\0';
-                if (x == xPos && y == yPos - 1) {
-                    terrainChar = board.getBoard()[y][x];
-                }
-                else if (x == (xPos - 1) && y == yPos) {
-                    terrainChar = board.getBoard()[y][x];
-                }
-                else if (x == xPos + 1 && y == yPos) {
-                    terrainChar = board.getBoard()[y][x];
-                }
-                else if (x == xPos && y == yPos + 1) {
-                    terrainChar = board.getBoard()[y][x];
-                }
-                else {
-                    continue;
-                }
 
-                neighbors.add(new Node(board, x, y, Direction.compute(xPos, yPos, x, y)));
-            }
+        if(xPos > 0) {
+            neighbors.add(new Node(board, xPos - 1, yPos, Direction.compute(xPos, yPos, xPos - 1, yPos)));
+        }
+
+        if(xPos < board.cols - 1) {
+            neighbors.add(new Node(board, xPos + 1, yPos, Direction.compute(xPos, yPos, xPos + 1, yPos)));
+        }
+
+        if(yPos > 0) {
+            neighbors.add(new Node(board, xPos, yPos - 1, Direction.compute(xPos, yPos, xPos, yPos - 1)));
+        }
+
+        if(yPos < board.rows - 1) {
+            neighbors.add(new Node(board, xPos, yPos + 1, Direction.compute(xPos, yPos, xPos, yPos + 1)));
         }
 
         return neighbors;

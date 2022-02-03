@@ -1,4 +1,5 @@
 
+import java.math.BigInteger;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -19,7 +20,8 @@ public class Analysis {
             System.out.println("Analysis of board number " + (k + 1) + ": ");
 
             // TODO change to size so that H1 takes 30 seconds (100x100 seems okay)
-            Board b1 = BoardFactory.getBoard(10, 10);
+            Board b1 = BoardFactory.getBoard(100, 100);
+
 
             System.out.println("New board: ");
             System.out.println(b1);
@@ -41,9 +43,9 @@ public class Analysis {
                 final Heuristic heuristicN = Heuristic.values()[i - 1];
                 final AStar aStarN = new AStar(heuristicN);
 
-                Instant start = Instant.now();
+                final Instant start = Instant.now();
                 final ArrayList<AStar.PathNode> pathN = aStarN.createPath(startNode1, endNode1);
-                Instant stop = Instant.now();
+                final Instant stop = Instant.now();
 
                 System.out.println("Heuristic " + i + ": ");
                 System.out.println("Computation Time: " + Duration.between(start, stop).getSeconds() + " seconds");
@@ -74,7 +76,7 @@ public class Analysis {
             if(pathNode.getBoardNode().isGoal()) {
                 pathChar = 'G';
             }
-            else if(pathNode.getActions().contains(AStar.PathNode.Action.BOOST)) {
+            else if(pathNode.getActions().contains(AStar.PathNode.Action.BASH)) {
                 pathChar = 'B';
             }
             else {

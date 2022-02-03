@@ -31,7 +31,7 @@ public enum Heuristic {
          * In order to be superior over the previous heuristic, could consider the potentially necessary cost to turn
          * on the current node in order to face the direction of the goal.
          */
-        return horizontalDiff + verticalDiff + start.turnCost(end);
+//        return horizontalDiff + verticalDiff + start.turnCost(end);
 //===================================================================================
 
 //===================================================================================
@@ -57,6 +57,8 @@ public enum Heuristic {
 //        return horizontalDiff + verticalDiff + inBetweenTerrain;
 //===================================================================================
 
+        // TODO Maybe we could have a heuristic that considered the maximum number of turns that could be involved?
+
         /*
          * TODO this needs to be changed
          *      Technically this is inadmissible, it is overestimating costs of the goal node.
@@ -64,7 +66,7 @@ public enum Heuristic {
          *      However, since the terrain cost of the goal node is always 1 as well, this wil cause the
          *      heuristic to total to 2, which is inadmissible.
          */
-//        return horizontalDiff + verticalDiff + end.getTerrain();
+        return horizontalDiff + verticalDiff + end.getTerrain();
     }),
 
     INADMISSIBLE((start, end) ->

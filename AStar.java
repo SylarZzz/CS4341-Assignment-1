@@ -1,3 +1,5 @@
+import java.math.BigInteger;
+import java.time.Instant;
 import java.util.*;
 
 public class AStar {
@@ -19,9 +21,15 @@ public class AStar {
      * This seems to prove it is something wrong with A* still.
      */
     public ArrayList<PathNode> createPath(Node from, Node to) {
+        System.gc();
+        final BigInteger beforeUsedMem =
+                BigInteger.valueOf(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory());
         final Set<PathNode> alreadySeen = new HashSet<>();
         final Queue<PathNode> queue = new PriorityQueue<>();
-        queue.add(new PathNode(null, from, 0, heuristic.compute(from, to), new ArrayList<>()));
+
+        final PathNode startNode = new PathNode(null, from, 0, heuristic.compute(from, to), new ArrayList<>());
+        queue.add(startNode);
+        alreadySeen.add(startNode);
 
         numActions = 0;
         numNodesExpanded = 0;
@@ -34,6 +42,12 @@ public class AStar {
 
             // The end node has been found
             if(to.equals(currNode.boardNode)) {
+                System.gc();
+                final BigInteger afterUsedMem =
+                        BigInteger.valueOf(Runtime.getRuntime().totalMemory()-Runtime.getRuntime().freeMemory());
+
+                System.out.println("Memory Usage: " + (afterUsedMem.subtract(beforeUsedMem)) + " bytes");
+
                 ArrayList<PathNode> path = new ArrayList<>();
                 PathNode nextNode = currNode;
                 while(nextNode != null) {
@@ -61,7 +75,7 @@ public class AStar {
                 // If the current node is not facing the same direction as the neighbor, a turn action is required
                 if(neighbor.getDirection() != currBoardNode.getDirection()) {
                     // If a boost action was previously used on currNode, then only forward can be used, no turns
-                    if(currNode.actions.contains(PathNode.Action.BOOST)) {
+                    if(currNode.actions.contains(PathNode.Action.BASH)) {
                         continue;
                     }
                     actions.add(PathNode.Action.TURN);
@@ -85,11 +99,11 @@ public class AStar {
                         (neighbor.getDirection().equals(Node.Direction.NORTH) ||
                             neighbor.getDirection().equals(Node.Direction.SOUTH));
 
-                if(!currNode.actions.contains(PathNode.Action.BOOST) && neighbor.getTerrain() > 3 &&
+                if(!currNode.actions.contains(PathNode.Action.BASH) && neighbor.getTerrain() > 3 &&
                         (movingFarFromX || movingFarFromY)) {
                     // Add a boost action node as an option
                     final ArrayList<PathNode.Action> boostActions = new ArrayList<>(actions);
-                    boostActions.add(PathNode.Action.BOOST);
+                    boostActions.add(PathNode.Action.BASH);
 
                     final PathNode newNode = new PathNode(
                             currNode,
@@ -99,7 +113,7 @@ public class AStar {
                             boostActions);
 
                     // If the node has already been seen, skip the coordinate
-                    if(alreadySeen.contains(newNode)) {
+                    if(alreadySeen.contains(newNode) || newNode.isPathDuplicate()) {
                         continue;
                     }
 
@@ -107,6 +121,7 @@ public class AStar {
                     queue.add(newNode);
                     // Increase expanded node count
                     numNodesExpanded += 1;
+                    alreadySeen.add(newNode);
                 }
 
                 // Provide the option for not boosting
@@ -121,7 +136,7 @@ public class AStar {
                         actions);
 
                 // If the node has already been seen, skip the coordinate
-                if(alreadySeen.contains(newNode)) {
+                if(alreadySeen.contains(newNode) || newNode.isPathDuplicate()) {
                     continue;
                 }
 
@@ -129,9 +144,8 @@ public class AStar {
                 queue.add(newNode);
                 // Increase expanded node count
                 numNodesExpanded += 1;
+                alreadySeen.add(newNode);
             }
-
-            alreadySeen.add(currNode);
         }
 
         return new ArrayList<>();
@@ -153,7 +167,7 @@ public class AStar {
         enum Action {
             FORWARD,
             TURN,
-            BOOST
+            BASH
         }
 
         private final PathNode prevNode;
@@ -192,6 +206,21 @@ public class AStar {
             return actions;
         }
 
+        public boolean isPathDuplicate() {
+            PathNode currNode = this.prevNode;
+
+            while(currNode != null) {
+                final Node currBoardNode = currNode.boardNode;
+                if(currBoardNode.getxPos() == boardNode.getxPos() &&
+                        currBoardNode.getyPos() == boardNode.getyPos()) {
+                    return true;
+                }
+                currNode = currNode.prevNode;
+            }
+
+            return false;
+        }
+
         @Override
         public int compareTo(PathNode other) {
             // Output whether or not they are equal
@@ -209,12 +238,46 @@ public class AStar {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             PathNode pathNode = (PathNode) o;
+//
+//            /*
+//             * See if the same actions were being performed.
+//             * Exclude turns, since this should only be dependent on the
+//             * current nodes being compared. Factoring in turns causes it
+//             * to be dependent on the direction of the previous node, which
+//             * is not necessary here.
+//             */
+//            for(final Action action : actions) {
+//                // skip turns
+//                if(action == Action.TURN) {
+//                    continue;
+//                }
+//
+//                // Return false if the same actions weren't being performed
+//                if(!pathNode.actions.contains(action)) {
+//                    return false;
+//                }
+//            }
+//
+//            return boardNode.equals(pathNode.boardNode);
+
             return boardNode.equals(pathNode.boardNode) &&
                     score == pathNode.score;
         }
 
         @Override
         public int hashCode() {
+//            final ArrayList<Object> hashables = new ArrayList<>();
+//
+//            hashables.add(boardNode);
+//
+//            for(Action action : actions) {
+//                if(action == Action.TURN) {
+//                    continue;
+//                }
+//                hashables.add(action);
+//            }
+//
+//            return Objects.hash(hashables.toArray());
             return Objects.hash(boardNode, score);
         }
     }
