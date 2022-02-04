@@ -77,8 +77,8 @@ public class AStarPathfinder {
                     if(currNode.actions.contains(PathNode.Action.BASH)) {
                         continue;
                     }
-                    actions.add(PathNode.Action.TURN);
-                    score += currBoardNode.turnCost(neighbor);
+                    actions.addAll(PathNode.Action.computeTurnDir(currBoardNode.getDirection(), neighbor.getDirection()));
+                    score += currBoardNode.turnCost(neighbor.getDirection());
                 }
 
                 /*
@@ -165,8 +165,38 @@ public class AStarPathfinder {
     public static class PathNode implements Comparable<PathNode> {
         enum Action {
             FORWARD,
-            TURN,
-            BASH
+            LEFT,
+            RIGHT,
+            BASH;
+
+            public static ArrayList<Action> computeTurnDir(final Node.Direction startDir, final Node.Direction endDir) {
+                final ArrayList<Action> turnActions = new ArrayList<>();
+                int ordDiff = endDir.ordinal() - startDir.ordinal();
+
+                // 180 degree turns
+                if(Math.abs(ordDiff) == 2) {
+                    turnActions.add(LEFT);
+                    turnActions.add(LEFT);
+                }
+                // 90 degree turns
+                else {
+                    if(ordDiff >= 3) {
+                        ordDiff = 1;
+                    }
+                    else if(ordDiff <= -3) {
+                        ordDiff = -1;
+                    }
+
+                    if(ordDiff == 1) {
+                        turnActions.add(RIGHT);
+                    }
+                    else if(ordDiff == -1) {
+                        turnActions.add(LEFT);
+                    }
+                }
+
+                return turnActions;
+            }
         }
 
         private final PathNode prevNode;

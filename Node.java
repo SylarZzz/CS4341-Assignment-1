@@ -131,12 +131,18 @@ public class Node {
         return neighbors;
     }
 
-    public int turnCost(Node neighbor) {
-        if(neighbor.direction != this.direction) {
-            return (int) Math.ceil(this.terrain / 2.0);
+    public int turnCost(final Direction newDirection) {
+        double turnCost = 0;
+        if(newDirection != this.direction) {
+            turnCost = this.terrain / 2.0;
         }
 
-        return 0;
+        final int ordDiff = Math.abs(newDirection.ordinal() - direction.ordinal());
+        if(ordDiff == 2) {
+            turnCost *= 2;
+        }
+
+        return (int) Math.ceil(turnCost);
     }
 
     @Override
