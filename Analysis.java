@@ -1,5 +1,4 @@
 
-import java.math.BigInteger;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -41,10 +40,10 @@ public class Analysis {
             // Run analysis with six heuristics
             for (int i = 1; i <= Heuristic.values().length; i++) {
                 final Heuristic heuristicN = Heuristic.values()[i - 1];
-                final AStar aStarN = new AStar(heuristicN);
+                final AStarPathfinder aStarN = new AStarPathfinder(heuristicN);
 
                 final Instant start = Instant.now();
-                final ArrayList<AStar.PathNode> pathN = aStarN.createPath(startNode1, endNode1);
+                final ArrayList<AStarPathfinder.PathNode> pathN = aStarN.createPath(startNode1, endNode1);
                 final Instant stop = Instant.now();
 
                 System.out.println("Heuristic " + i + ": ");
@@ -58,7 +57,7 @@ public class Analysis {
         }
     }
 
-    private static void printPath(ArrayList<AStar.PathNode> pathNodes) {
+    private static void printPath(ArrayList<AStarPathfinder.PathNode> pathNodes) {
         final char[][] origBoard = pathNodes.get(pathNodes.size() - 1).getBoardNode().board.board;
         final char[][] board = new char[origBoard.length][origBoard[0].length];
 
@@ -69,14 +68,14 @@ public class Analysis {
             }
         }
 
-        for(AStar.PathNode pathNode : pathNodes) {
+        for(AStarPathfinder.PathNode pathNode : pathNodes) {
             final Node currNode = pathNode.getBoardNode();
 
             final char pathChar;
             if(pathNode.getBoardNode().isGoal()) {
                 pathChar = 'G';
             }
-            else if(pathNode.getActions().contains(AStar.PathNode.Action.BASH)) {
+            else if(pathNode.getActions().contains(AStarPathfinder.PathNode.Action.BASH)) {
                 pathChar = 'B';
             }
             else {
