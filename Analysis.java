@@ -43,7 +43,7 @@ public class Analysis {
                 final AStarPathfinder aStarN = new AStarPathfinder(heuristicN);
 
                 final Instant start = Instant.now();
-                final ArrayList<AStarPathfinder.PathNode> pathN = aStarN.createPath(startNode1, endNode1);
+                final ArrayList<Node> pathN = aStarN.createPath(startNode1, endNode1);
                 final Instant stop = Instant.now();
 
                 System.out.println("Heuristic " + i + ": ");
@@ -57,29 +57,25 @@ public class Analysis {
         }
     }
 
-    private static void printPath(ArrayList<AStarPathfinder.PathNode> pathNodes) {
-        final char[][] origBoard = pathNodes.get(pathNodes.size() - 1).getBoardNode().board.board;
+    private static void printPath(ArrayList<Node> pathNodes) {
+        final char[][] origBoard = pathNodes.get(pathNodes.size() - 1).board.board;
         final char[][] board = new char[origBoard.length][origBoard[0].length];
 
         // copy old array into new one
         for(int i = 0; i < origBoard.length; i++) {
-            for(int j = 0; j < origBoard[0].length; j++) {
-                board[i][j] = origBoard[i][j];
-            }
+            System.arraycopy(origBoard[i], 0, board[i], 0, origBoard[0].length);
         }
 
-        for(AStarPathfinder.PathNode pathNode : pathNodes) {
-            final Node currNode = pathNode.getBoardNode();
-
+        for(Node pathNode : pathNodes) {
             final char pathChar;
-            if(pathNode.getBoardNode().isGoal()) {
+            if(pathNode.isGoal()) {
                 pathChar = 'G';
             }
-            else if(pathNode.getActions().contains(AStarPathfinder.PathNode.Action.BASH)) {
+            else if(pathNode.getActions().contains(Node.Action.BASH)) {
                 pathChar = 'B';
             }
             else {
-                switch(currNode.getDirection()) {
+                switch(pathNode.getDirection()) {
                     case NORTH -> pathChar = '^';
                     case EAST ->  pathChar = '>';
                     case SOUTH ->  pathChar = 'V';
@@ -87,7 +83,7 @@ public class Analysis {
                     default -> pathChar = ' ';
                 }
             }
-            board[currNode.getyPos()][currNode.getxPos()] = pathChar;
+            board[pathNode.getyPos()][pathNode.getxPos()] = pathChar;
         }
         System.out.println(new Board(board));
     }

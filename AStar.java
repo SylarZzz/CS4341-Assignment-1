@@ -39,16 +39,16 @@ public class AStar {
 
         // Generate the desired path with the selected A* heuristic
         final AStarPathfinder aStar = new AStarPathfinder(heuristic);
-        final ArrayList<AStarPathfinder.PathNode> path = aStar.createPath(startNode, endNode);
+        final ArrayList<Node> path = aStar.createPath(startNode, endNode);
 
         System.out.println("Path score: " + aStar.getPathScore());
         System.out.println("Number of actions: " + aStar.getNumActions());
         System.out.println("Number of nodes expanded: " + aStar.getNumNodesExpanded());
         System.out.println("Series of actions: ");
 
-        for(AStarPathfinder.PathNode pathNode : path) {
-            ArrayList<AStarPathfinder.PathNode.Action> actions = pathNode.getActions();
-            for(AStarPathfinder.PathNode.Action action : actions) {
+        for(Node pathNode : path) {
+            ArrayList<Node.Action> actions = pathNode.getActions();
+            for(Node.Action action : actions) {
                 System.out.println(action.name());
             }
         }
