@@ -66,7 +66,6 @@ public class AStarPathfinder {
             // Get neighbor nodes
             ArrayList<Node> neighbors = currNode.boardNode.getNeighbors();
 
-            // TODO node expanded count is inaccurate due to it be calculated without the nodes "technically" being expanded
             // Add the neighbors to the queue (if they haven't already been seen, or contain a piece)
             for(Node neighbor : neighbors) {
                 final ArrayList<PathNode.Action> actions = new ArrayList<>();

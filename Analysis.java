@@ -14,11 +14,9 @@ public class Analysis {
 
 
         // Generate 10 boards and run each of them with the six heuristics
-        // TODO remove limit of 1 board
-        for (int k = 0; k < 1; k++) {
+        for (int k = 0; k < 10; k++) {
             System.out.println("Analysis of board number " + (k + 1) + ": ");
 
-            // TODO change to size so that H1 takes 30 seconds (100x100 seems okay)
             Board b1 = BoardFactory.getBoard(100, 100);
 
 
@@ -51,7 +49,7 @@ public class Analysis {
                 System.out.println("Path score: " + aStarN.getPathScore());
                 System.out.println("Number of actions: " + aStarN.getNumActions());
                 System.out.println("Number of nodes expanded: " + aStarN.getNumNodesExpanded());
-                printPath(pathN);
+//                printPath(pathN);
                 System.out.println();
             }
         }
